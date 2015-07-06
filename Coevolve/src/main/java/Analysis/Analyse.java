@@ -37,6 +37,30 @@ public class Analyse {
 			cmd[2] = command;
 			executeCommand(false, commitId);
 		}
+
+		update();
+	}
+
+	private void update() {
+		try {
+			if (connection == null || connection.isClosed()) {
+				Class.forName(DRIVER).newInstance();
+				connection = DriverManager.getConnection(DATABASE_URL,
+						"postgres", "admin");
+			}
+			statement = connection.createStatement();
+
+			String query = "update \"" + this.tableName
+					+ "\" set \"ORMChange\" = 0 where \"commitId\" is null";
+
+			statement.executeUpdate(query);
+
+			statement.close();
+			connection.close();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void executeCommand(boolean save, String commitId) {

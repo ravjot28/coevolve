@@ -24,6 +24,7 @@ public class CountMetrics {
 		this.tableName = tableName;
 	}
 
+	
 	public void start() {
 		List<Double> list = getData();
 
